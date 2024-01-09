@@ -5,6 +5,6 @@ app.get('/api/get', (req,res) => {
     res.send({message: "Hello back to nodejs"})
 })
 
-app.listen(8000, () => {
-    console.log("Listening to 8000");
+app.listen(5000, () => {
+    console.log("Listening to 5000");
 })
