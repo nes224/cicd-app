@@ -49,6 +49,7 @@ jobs:
               docker-compose down --rmi all -v
               docker pull nes224/nodejscicd:latest
               docker run -d -p 5000:5000 -name nodejs-app-container nes224/nodejscicd
-
+              docker logout
+          EOF
 
              
