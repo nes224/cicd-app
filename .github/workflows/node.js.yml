@@ -33,23 +33,13 @@ jobs:
     needs: build
     steps:
       - name: Checkout main
-        uses: actions/checkout@v3
-      - name: Add the private SSH key to the ssh-agent
-        env:
-          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-        run: |
-          mkdir -p ~/.ssh
-          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          ssh-add - <<< "${{ vars.SSH_PRIVATE_KEY_DEV }}"
+        uses: appleboy/ssh-acrion@v0.1.5
+        with:
+          host: ${{ vars.EC2_DEV }}
+          key: ${{ vars.SSH_PRIVATE_KEY_DEV }}
+          port: 22
+          script: |
+            mkdir /home/ec2-user/test
 
-      - name: Deploy images on AWS EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ vars.EC2_DEV }} << EOF
-              docker-compose down --rmi all -v
-              docker pull nes224/nodejscicd:latest
-              docker run -d -p 5000:5000 -name nodejs-app-container nes224/nodejscicd
-              docker logout
-          EOF
 
              
