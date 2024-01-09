@@ -12,7 +12,7 @@ jobs:
     runs-on: [ubuntu-latest]
     env:
       DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ vars.DOCKER_PASSWOR }}
+      DOCKER_PASSWORD: ${{ vars.DOCKER_PASSWORD }}
     steps:
       - name: Read a variable docker username
         run: echo "My docker_username value is $DOCKER_USERNAME"
