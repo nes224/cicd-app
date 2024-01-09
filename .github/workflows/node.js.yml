@@ -29,27 +29,14 @@ jobs:
   
   deploy:
     needs: build
-    runs-on: [ubuntu-latest]
-    env:
-      DEPLOY_PATH: /home/ec2-user/node-test-api
-      EC2: ${{ vars.EC2_DEV }}
-      SSH_PRIVATE_KEY: ${{ vars.SSH_PRIVATE_KEY_DEV }}
+    runs-on: [aws-ec2]
     steps:
-      - name: Authorized
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -qq git
-          # Setup SSH deploy keys
-          sudo "which ssh-agent || ( apt-get install -qq openssh-client )"
-          sudo eval $(ssh-agent -s)
-          sudo ssh-add <(echo "$SSH_PRIVATE_KEY")
-          sudo mkdir -p ~/.ssh
-          sudo '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyCheck
-      - name: Deploy Docker to AWS EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no $EC2 "mkdir $DEPLOY_PATH && cd $DEPLOY_PATH"
-
-
+      - name: Pull image from docker hub
+        run: docker pull nes224/nodejscicd:latest
+      - name: Delete old container
+        run: docker rm -f nodejs-app-container
+      - name: Run docker container
+        run: docker run -d -p 5000:5000 --name nodejs-app-container
 
 
              
