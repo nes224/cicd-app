@@ -5,33 +5,27 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "cicd-docker-ec2" ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest]
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWOR }}
     steps:
+      - name: Read a variable docker username
+        run: echo "My docker_username value is $DOCKER_USERNAME"
+      - name: Read a variable docker password
+        run: echo "My docker_password value is $DOCKER_PASSWORD"
       - name: Checkout source
         uses: actions/checkout@v3
-      - shell: cmd
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: docker login -u "%DOCKER_USERNAME" -p "%DOCKER_PASSWORD"
+      - name: Login to docker hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Build docker image
         run: docker build -t integrationninjas/nodejs-app .
       - name: Publish image to docker hub
         run: docker push integrationninjas/nodejs-app:latest
-  
-  deploy:
-    needs: build
-    runs-on: [aws-ec2]
-    steps:
-      - name: Pull image from docker hub
-        run: docker pull integrationinjas/nodejs-app:latest
-      - name: Delete old container
-        run: docker rm -f nodejs-app-container
-      - name: Run docker container
-        run: docker run -d -p 5000:5000 -name nodejs-app-container integrationninjas/nodejs-app
+
 
              
