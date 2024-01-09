@@ -38,6 +38,10 @@ jobs:
           echo "SSH Key contents: $(echo "${{ vars.EC2_SSH_PRIVATE_KEY }}")" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
+      - name: Debug SSH Key
+        run: |
+          echo "SSH KEY contents: $(cat ~/.ssh/id_rsa)"
+
       - name: Deploy to EC2
         run: | 
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ vars.EC2_DEV }} 'mkdir -p /home/ec2-user/test'
