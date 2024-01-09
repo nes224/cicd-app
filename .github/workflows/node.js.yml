@@ -33,7 +33,7 @@ jobs:
     needs: build
     steps:
       - name: Checkout main
-        uses: appleboy/ssh-acrion@v0.1.5
+        uses: appleboy/ssh-action@v0.1.5
         with:
           host: ${{ vars.EC2_DEV }}
           key: ${{ vars.SSH_PRIVATE_KEY_DEV }}
