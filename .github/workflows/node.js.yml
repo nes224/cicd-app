@@ -45,7 +45,6 @@ jobs:
 
       - name: Deploy images on AWS EC2
         run: |
-          scp -o StrictHostKeyChecking=no -r ${{ vars.EC2_DEV }}:
           ssh -o StrictHostKeyChecking=no ${{ vars.EC2_DEV }} << EOF
               docker-compose down --rmi all -v
               docker pull nes224/nodejscicd:latest
