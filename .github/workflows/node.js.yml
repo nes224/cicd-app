@@ -37,14 +37,14 @@ jobs:
     steps:
       - name: Authorized
         run: |
-          - apk add openssh-client
-          - eval $(ssh-agent -s)
-          - echo $SSH_PRIVATE_KEY | tr -d '\r' | ssh-add -
-          - mkdir -p ~/.ssh
-          - chmod 700 ~/.ssh
-      - name: Deploy Docker to AWS Ec2
+          apk add openssh-client
+          eval $(ssh-agent -s)
+          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+      - name: Deploy Docker to AWS EC2
         run: |
-          - ssh -o StrictHostKeyChecking=no $EC2 "cd $DEPLOY_PATH && docker pull nes224/nodejscicd && docker-compose down --rmi all && docker run -d -p 5000:5000 --name nodejs-app-container integrationninjas/nodejs-app"       
+          ssh -o StrictHostKeyChecking=no $EC2 "cd $DEPLOY_PATH && docker pull nes224/nodejscicd && docker-compose down --rmi all && docker run -d -p 5000:5000 --name nodejs-app-container integrationninjas/nodejs-app"
 
 
 
