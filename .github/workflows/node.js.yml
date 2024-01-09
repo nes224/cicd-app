@@ -37,10 +37,4 @@ jobs:
 
       - name: Deploy to EC2
         run: | 
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@${{ secrets.EC2_DEV }}
-          mkdir /home/ec2-user/test
-
-
-
-
-             
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@${{ secrets.EC2_DEV }} 'mkdir -p /home/ec2-user'
