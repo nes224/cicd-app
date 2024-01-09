@@ -43,5 +43,15 @@ jobs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           ssh-add - <<< "${{ vars.SSH_PRIVATE_KEY_DEV }}"
 
+      - name: Deploy images on AWS EC2
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: |
+          scp -o StrictHostKeyChecking=no -r ${{ vars.EC2_DEV }}:
+          ssh -o StrictHostKeyChecking=no ${{ vars.EC2_DEV }} << EOF
+              docker-compose down --rmi all -v
+              docker pull nes224/nodejscicd:latest
+              docker run -d -p 5000:5000 -name nodejs-app-container nes224/nodejscicd
+
 
              
