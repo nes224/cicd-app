@@ -44,4 +44,12 @@ jobs:
 
       - name: Deploy to EC2
         run: | 
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ vars.EC2_DEV }} 'mkdir -p /home/ec2-user/test'
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ vars.EC2_DEV }} << EOF
+            mkdir -p /home/ec2-user/test
+            cd /home/ec2-user/
+            mkdir -p nodeJs-app
+            cd nodeJs-app
+            docker-compose down --rmi all -v
+            docker pull nes224/nodejscicd:latest
+            docker run -d -p 5000:5000 -name nodejs-app-container nes224/nodejscicd:latest
+          EOF
